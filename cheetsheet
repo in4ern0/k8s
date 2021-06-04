@@ -1,0 +1,135 @@
+https://labs.play-with-k8s.com/
+yum install -y conntrack
+
+
+minikube start --memory="1992"
+minikube stop
+minikube delete 
+minikube kubectl -- get po -A - check k8s cluster info (with minikube)
+minikube config set memory 16384 - Increase the default memory limit (requires a restart) 
+minikube start -p aged --kubernetes-version=v1.16.1 - Create a second cluster running an older Kubernetes release
+minikube delete --all - Delete all of the minikube clusters 
+minikube service my-service --url - Give url for browser
+
+kubectl run hello-minikube - create deployment
+kubectl delete deployment hello-minikube - delete deployment
+kubectl cluster-info
+kubectl get nodes
+kubectl get all 
+kubectl get nodes -o wide - detailed info
+kubectl port-forward service/hello-minikube 7080:8080 - Alternatively, use kubectl to forward the port
+kubectl get po -A - check k8s cluster info
+kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.4
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+kubectl get pods --all-namespaces   - check all pods status
+kubectl get ns - 
+kubectl get services
+kubectl get svc 
+kubectl create -f pod-definition.yml --record - create pods with .yml file 
+kubectl get replicationcontroller
+kubectl edit pods apache-rc-x5tfj - podu ozunde deyishiklik etmek
+
+
+kubectl edit replicasets.apps - runtime change (for exp: replicas=10) 
+kubectl get replicaset
+kubectl replace -f replicaset-definition.yml - update .yml file for replicaset 
+kubectl scale --replicas=3 -f replicaset-definition.yml
+kubectl scale --replicas=3 replicaset my-rc
+kubectl delete replicaset myyapp-replicaset
+kubectl describe replicaset
+
+kubectl get deployments.apps -o wide
+kubectl apply -f deployment.yml - after change yml file --record
+kubectl set image deployment my-dep nginx-containers=nginx:1.9.1 --record
+kubectl rollout undo deployment my-dep
+kubectl rollout status deployment my-dep
+kubectl rollout history deployment my-dep
+kubectl run nginx --image=nginx
+
+kubectl get services -o wide
+kubectl get rs nrsname -o yaml - for yaml format
+kubectl create -f . - hamisini birden yaradir
+kubectl delete -f . - hamisini birden silir
+
+
+*************************************
+kubectl get svc -o wide
+kubectl get rs 
+kubectl get ns
+kubectl get all
+kubectl get nodes
+kubectl get pod
+kubectl get pod,svc
+kubectl get pods --namespace=dev 
+*************************************
+
+kubectl config set-context $(kubectl config current-context) --namespace=dev ------ change defaultnamespace for "dev"
+
+
+
+kubeadm join 192.168.157.7:6443 --token ws2wk6.8mgbm9dsx8vklw6j \
+        --discovery-token-ca-cert-hash sha256:3ea0233790dfcb12b76808f754a3679c6f0621e002a1d9bab0b3bd75660c8e6d
+
+
+
+
+modprobe br_netfilter
+lsmod | grep br_netfilter
+ 
+
+
+
+--kubeadm cluster master and 2 worker nodes
+
+
+for master 
+
+firewall-cmd  --add-port=6443/tcp --add-port=10250/tcp --add-port=2379-2380/tcp --add-port=10251/tcp --add-port=10252/tcp  --permanent
+
+firewall-cmd --reload
+
+firewall-cmd --list-all 
+
+
+for woker
+
+firewall-cmd --add-port=30000-32767/tcp  --add-port=10250/tcp --permanent
+
+firewall-cmd --reload
+
+firewall-cmd --list-all 
+
+
+
+1) Kubeadm install 
+
+swapoff -a  - FOR ALL NODES
+vim /etc/fstab - comment swap line
+
+2) kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=192.168.157.7
+  To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+Alternatively, if you are the root user, you can run:
+
+ export KUBECONFIG=/etc/kubernetes/admin.conf
+
+
+3)kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml - pod network apply 
+  
+  kubectl get pods --all-namespaces
+
+
+echo "source <(kubectl completion bash)" >> ~/.bashrc
+source <(kubectl completion bash)
+
+
+
+kubectl get events --all-namespaces  --sort-by='.metadata.creationTimestamp' - check all ns through creation time 
+kubectl -n kube-system get secret clusterinfo -o yaml | grep token-map | awk '{print $2}' | base64 -d | sed "s|{||g;s|}||g;s|:|.|g;s/\"//g;" | xargs echo
+cat /etc/kubernetes/pki/tokens.csv
+
+
