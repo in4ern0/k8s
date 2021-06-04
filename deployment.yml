@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odoo-deployment
+  labels:
+    type: front-end
+    app: odoo-app
+spec:
+  template:
+    metadata:
+      name: odoo-pod
+      labels:
+         type: front-end 
+         app: odoo-app
+    spec:
+      containers:
+         - name: odoo-containers
+           image: odoo
+  replicas: 6
+  selector:
+    matchLabels:
+         type: front-end
+         app: odoo-app
+

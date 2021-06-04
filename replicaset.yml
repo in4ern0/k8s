@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata: 
+  name: odoo-replicaset
+  labels:
+    type: front-end
+    app: odoo-app
+spec:
+  template:
+    metadata:
+      name: odoo-pod
+      labels:
+        tier: odoo-pod
+        app: odoo-app
+    spec:
+     containers:
+       - name: odoo-container
+         image: nginx
+  replicas: 7
+  selector: 
+     matchLabels:
+        tier: odoo-pod
+        app: odoo-app
+
