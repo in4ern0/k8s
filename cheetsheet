@@ -30,6 +30,7 @@ kubectl get replicationcontroller
 kubectl edit pods apache-rc-x5tfj - podu ozunde deyishiklik etmek
 
 
+
 kubectl edit replicasets.apps - runtime change (for exp: replicas=10) 
 kubectl get replicaset
 kubectl replace -f replicaset-definition.yml - update .yml file for replicaset 
@@ -63,14 +64,228 @@ kubectl get pod,svc
 kubectl get pods --namespace=dev 
 *************************************
 
+
+
+
 kubectl config set-context $(kubectl config current-context) --namespace=dev ------ change defaultnamespace for "dev"
+kubectl get ns --no-headers | wc -l - total namespaces
+kubectl run redis --image=redis --dry-run=client -o yaml > pod.yml
+kubectl get pods --all-namespaces
+kubectl replace --force -f deployment.yml
+kubectl create deployment webapp --image=kodekloud/webapp-color --replicas=3
+kubectl create deployment --image=redis  redis-deploy --replicas=2 --namespace=dev-ns
+kubectl expose pod httpd --name=httpd --type=ClusterIP --target-port=80 --port=80 --dry-run=client -o yaml > svc.yml && kubectl create -f svc.yml
+kubectl get pods --selector app=App1
+kubectl get pods --show-labels
+kubectl get pods -l env=dev --no-headers | wc -l 
+kubectl get pods -l bu=finance --no-headers | wc -l 
+kubectl get po --no-headers -l bu=finance,env=prod,tier=frontend
+kubectl run mosquito --image=nginx --restart=always
+kubectl explain pod --recursive | less
+kubectl get ds --all-namespaces - daemonsets
+kubectl get cm - configmap 
+kubectl get csr - certificates
+kubectl get ns 
+kubectl get rc
+kubectl get sa - service account  
+kubectl -n kube-system get ep kube-dns - endpoints 
+****************************************************************************************************
+kubectl logs-f podname 
+kubectl logs -f podname containername - on multiple container 
+kubectl logs webapp-2 -c simple-webapp
+kubectl  get configmaps - for config 
+kubectl create cm configmapname --from-literal=APP_COLOR=darkblue 
+kubectl create secret generic app-secret --from-literal=DB_HOST=mysql --from-literal=DB_User=root --from-literal=DB_Password=passwd
+kubectl create secret generic <secret-name> --from-file=<path-to-file>
+kubectl create secret generic --from-file=app_secret.properties
+
+
+1.kubectl drain node-1 --ignore-daemonsets --force - NODE-u boshaltmaq uchun (drain eden de cordon olur) 
+2.kubectl uncordon node-1 - NODE drain-den sonra unscheduled olur onu scheduled etmek uchun.
+kubectl cordon node-2 - birbasha unscheduled edir NODE-u 
+
+kubeadm token list - cluster token 
+kubeadm upgrade apply
+kubeadm upgrade apply v1.12.0 - 
+kubeadm upgrade plan - info upgrade haqqinda melumat 
+apt-get upgrade -y kubeadm=1.12.0-00
+kubectl version --short 
+
+
+**************************************
+1.kubectl drain node-1
+  kubectl cordon node-1
+2.apt-get upgrade -y kubeadm=1.12.0-00
+3.apt-get upgrade -y kubelet=1.12.0-00
+4.kubeadm upgrade node config --kubelet-version v1.12.0
+5.systemctl restart kubelet
+**************************************
+
+kubectl config view
+kubectl config view --kubeconfig=my-custom-config
+kubectl config use-context prod-user@production - change context on .yaml
+kubectl config --kubeconfig=/root/my-kube-config use-context research
+kubectl config --kubeconfig=/root/my-kube-config current-context
 
 
 
-kubeadm join 192.168.157.7:6443 --token ws2wk6.8mgbm9dsx8vklw6j \
-        --discovery-token-ca-cert-hash sha256:3ea0233790dfcb12b76808f754a3679c6f0621e002a1d9bab0b3bd75660c8e6d
+openssl genrsa -out ca.key 2048 - generating ca.key 
+
+openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr - Certificate Signing Request
+
+openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
+
+openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
 
 
+openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt
+
+openssl req -new -key ca.key -subj "/CN=KUBERNETES-ADMIN/O=system:masters" -out ca.csr 
+
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout - check certificate 
+
+
+
+
+curl https://192.168.157.7:6443/version -k
+curl http://localhost:8001/version -k
+kubectl get roles
+kubectl get rolebindings
+kubectl describe rolebindings devuser-developer-binding 
+kubectl auth can-i create deployments
+kubectl auth can-i delete nodes
+kubectl auth can-i delete nodes --as dev-user
+kubectl auth can-i create deployments --as dev-user
+kubectl auth can-i create pods --as dev-user --namespace test 
+kubectl get pods --as dev-user
+kubectl auth can-i get pods --as dev-user --namespace default
+kubectl api-resources --namespaced=true
+kubectl api-resources --namespaced=false
+docker login private-registry.io - for private login 
+kubectl get secret private-reg-cred --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode
+docker run --user=1000 ubuntu sleep 3600 - userid=1000 olacaq
+docker run --cap-add MAC_ADMIN ubuntu
+docker run --cap-drop KILL ubuntu
+docker run --privileged ubuntu
+kubectl exec ubuntu-sleeper -- whoami
+kubectl get pod -l name=payroll
+kubectl describe netpol payroll-policy
+kubectl describe cm -n kube-system coredns --- to describe domain/zone and etc.
+
+
+
+docker volume create data_volume  - create volume 
+docker run -v data_volume:/var/lib/mysql mysql  - mount created volume (if you are not create volume docker automatic create for you)     --- old way
+docker run -v /data/mysql:/var/lib/mysql mysql  - mount folder to folder (it's called bind mount)   
+docker run  \ -- mount type=bind,source=/data/mysql,target=/var/lib/mysql mysql
+docker run -it \ --name mysql --volume-driver rexray/ebs --mount src=ebs-vol,target=/var/lib/mysql mysql - attach volume AWS 
+
+
+
+kubectl get persistentvolume
+kubectl get pv 
+kubectl get storageclasses.storage.k8s.io
+
+
+ip link
+ip netns add red 
+ip netns 
+ip netns exec red ip link
+ip link add veth-red type veth peer name veth-blue - red ve blue-nu birleshdirmek
+ip link set veth-red netns red - red-i red yerine birleshdirmek 
+ip link set veth-blue netns blue - blue-nu blue yerine birleshdirmek
+ip -n red addr add 192.168.15.1 dev veth-red - red-e İP assign elemek
+ip -n blue addr add 192.168.15.2 dev veth-blue - blue-ya İP assign elemek
+ip -n red link set veth-red up - red-i UP elemek
+ip -n blue link set veth-blue up - blue-nu UP elemek
+ip netns exec red ping 192.168.15.2 - red-den blue-ya ping edib yoxlamaq
+ip netns exec red arp - red-in ARP listine baxmaq
+ip netns exec blue arp - blue-nun ARP listine baxmaq
+arp - HOST-un ARP listine baxmaq
+
+             BES BİR NECHE İNTERFACE OLSA NECE BİRKESHDİRMELİ ???
+                           BRIDGE yaratmaq lazimdir 
+
+ip link add v-net-0 type bridge - BRIDGE yaratmaq  v-net-0 adinda
+ip link 
+ip link set dev v-net-0 up - BRIDGE UP 
+ip link add veth-red type veth peer name veth-red-br - add red cable for bridge
+ip link add veth-blue type veth peer name veth-blue-br - add blue cable for bridge
+ip link set veth-red netns red - add red cable end of BRIDGE 
+ip link set veth-red-br master v-net-0 - add red cable end of BRIDGE
+ip link set veth-blue netns blue - add blue cable end of BRIDGE 
+ip link set veth-blue-br master v-net-0 - add blue cable end of BRIDGE
+ip -n red addr add 192.168.15.1 dev veth-red - red-e İP assign elemek
+ip -n blue addr add 192.168.15.2 dev veth-blue - blue-ya İP assign elemek
+ip -n red link set veth-red up - red-i UP elemek
+ip -n blue link set veth-blue up - blue-nu UP elemek
+ip addr add 192.168.15.5/24 dev v-net-0 - v-net-0 a IP assign etmek (bridge uchun)
+ip netns exec blue route
+ip netns exec blue ping 192.168.1.3 - other network 
+ip netns blue ip route add 192.168.1.0/24 via 192.168.15.5
+iptables -t nat -A POSTROUTING -s 192.168.15.0/24 -j MASQUERADE - chole chixartmaq uchun 
+ip netns exec blue ip route add default via 192.168.15.5 - last add gateway for net access WWW
+iptables -t nat -A PREROUTING --dport 80 --to-destination 192.168.15.2:80 -j DNAT 
+iptables -L -t net | grep db-service
+
+docker run --network-none nginx 
+docker run --network host nginx
+docker inspect b35634 - describe  
+
+iptable -nvL -t nat - show nat chain 
+ll /etc/cni/net.d/ - current CNI config 
+ll /opt/cni/bin - all scripts for networking
+cat /var/lib/kubelet/config.yaml -- clusterDNS: - 10.96.0.10
+ps aux | grep kubectl
+
+kubectl run busybox --image=busybox --command sleep 1000 --dry-run=client -o yaml > pod.yml    ( add nodeName:node03 in a yaml for scheduling only for node03)
+kubectl exec -ti busybox -- bash 
+kubectl -n kube-system logs weave-net-h2x9w -c weave  ------ ipalloc-range= -e baxmaq lazimdir 
+
+
+
+kubectl get nodes -o json  ------ for json format 
+kubectl get nodes -o=jsonpath='{.items[*].metadata.name}'
+kubectl get nodes -o=jsonpath='{.items[*].metadata.name}{"\n"}'
+kubectl get nodes -o=jsonpath='{.items[*].metadata.name}{"\n"}{.items[*].status.nodeInfo.architecture}'
+kubectl get nodes -o=jsonpath='{.items[*].metadata.name}'{"\n"}{.items[*].status.capacity.cpu}
+
+
+2379 is the port of ETCD to which all control plane components connect to. 2380 is only for etcd peer-to-peer connectivity. When you have multiple master nodes. In this case we don't.
+
+
+
+
+kubectl get all --all-namespaces -o yaml > all-deploy-services.yaml  - backup all services 
+VELERO called ARK by HeptIO - for backup and restore tools
+
+--data-dir=/var/lib/etcd 
+etcdctl snapshot save -h   ---  and keep a note of the mandatory global options.
+
+Backup ---- ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key \
+  snapshot save  /opt/snapshot-pre-boot.db
+
+STATUS ---- ETCDCTL_API=3 etcdctl snapshot status  /opt/snapshot-pre-boot.db
+
+  Restore --- ETCDCTL_API=3 etcdctl  --data-dir /var/lib/etcd-from-backup \
+snapshot restore /opt/snapshot-pre-boot.db
+
+
+               *********************************
+               echo -n 'root' | base64 
+               echo -n 'cm9vdA' | base64 --decode
+               *********************************
+
+
+
+kubectl expose deployment odoo-deployment --port=8080  --name=odoo-service --target-port=8080 --type=NodePort
+--port=8080 --dry-run=client -o yaml > svc.yml 
+
+
+
+kubeadm join 192.168.157.7:6443 --token 2wgwsp.iai6uirhbsfsxqlq \
+        --discovery-token-ca-cert-hash sha256:fe912800b30264b87e499cf1664ee03bf04ca3631ebe17eae27daee805ef650c
 
 
 modprobe br_netfilter
@@ -118,9 +333,14 @@ Alternatively, if you are the root user, you can run:
  export KUBECONFIG=/etc/kubernetes/admin.conf
 
 
-3)kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml - pod network apply 
-  
-  kubectl get pods --all-namespaces
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml - pod network apply 
+kubectl apply -f        https://raw.githubusercontent.com/coreos/flannel/2140ac876ef134e0ed5af15c65e414cf26827915/Documentation/kube-flannel.yml
+curl https://docs.projectcalico.org/manifests/calico.yaml -O
+
+
+git clone https://github.com/kodekloudhub/kubernetes-metrics-server.git
+
+kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
 
 
 echo "source <(kubectl completion bash)" >> ~/.bashrc
@@ -131,5 +351,6 @@ source <(kubectl completion bash)
 kubectl get events --all-namespaces  --sort-by='.metadata.creationTimestamp' - check all ns through creation time 
 kubectl -n kube-system get secret clusterinfo -o yaml | grep token-map | awk '{print $2}' | base64 -d | sed "s|{||g;s|}||g;s|:|.|g;s/\"//g;" | xargs echo
 cat /etc/kubernetes/pki/tokens.csv
+
 
 
