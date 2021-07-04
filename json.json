@@ -54,4 +54,4 @@ $[?( @ > 40 )]
 
 $.car.wheels.[ ?(  @.location == "rear-right") ].model - only location "rear-right"
 
-
+[*].model
