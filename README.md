@@ -1,18 +1,4 @@
 # k8s
-{
-    "vehicles": {
-      "car": {
-        "color": "blue",
-        "price": "$20.000"
-    },
-      "bus": {
-        "color": "white",
-        "price": "$120.000"
-    }
-  }
-}
-
-
 
 {
  
