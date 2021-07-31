@@ -174,6 +174,23 @@ kubectl describe cm -n kube-system coredns --- to describe domain/zone and etc.
 
 
 
+
+
+
+*******************************************************************************
+kubectl run test-np --image=busybox:1.28 --rm -it -- sh 
+nc -z -v -w 2 np-test-service 80
+kubectl edit cm coredns -n kube-system
+
+curl http://127.0.0.1:6784/status
+kubectl get componentstatus
+kubectl edit cm coredns -n kube-system
+
+********************************************************************************
+
+
+
+
 docker volume create data_volume  - create volume 
 docker run -v data_volume:/var/lib/mysql mysql  - mount created volume (if you are not create volume docker automatic create for you)     --- old way
 docker run -v /data/mysql:/var/lib/mysql mysql  - mount folder to folder (it's called bind mount)   
@@ -240,7 +257,7 @@ ps aux | grep kubectl
 
 kubectl run busybox --image=busybox --command sleep 1000 --dry-run=client -o yaml > pod.yml    ( add nodeName:node03 in a yaml for scheduling only for node03)
 kubectl exec -ti busybox -- bash 
-kubectl -n kube-system logs weave-net-h2x9w -c weave  ------ ipalloc-range= -e baxmaq lazimdir 
+kubectl -n kube-system logs weave-net-h2x9w -c weave  ------ ipalloc-range=-e baxmaq lazimdir 
 
 
 
@@ -249,7 +266,16 @@ kubectl get nodes -o=jsonpath='{.items[*].metadata.name}'
 kubectl get nodes -o=jsonpath='{.items[*].metadata.name}{"\n"}'
 kubectl get nodes -o=jsonpath='{.items[*].metadata.name}{"\n"}{.items[*].status.nodeInfo.architecture}'
 kubectl get nodes -o=jsonpath='{.items[*].metadata.name}'{"\n"}{.items[*].status.capacity.cpu}
+kubectl get nodes -o=jsonpath='{range.items[*]}{.metadata.name}{"\t"}{.status.capacity.cpu}{"\n"}{end}'
+kubectl get nodes -o=custom-columns=ROLES:.metadata.name,CPU:.status.capacity.cpu
+kubectl get nodes --sort-by=.status.capacity.cpu
+kubectl get nodes -o=jsonpath='{range .items[*]}{.status.nodeInfo.osImage}'
 
+
+
+kubectl describe  pods -n kube-system -l component=etcd |grep Command: -A18
+
+kubectl create service nodeport nginx --tcp=80:80 --node-port=30080 --dry-run=client -o yaml
 
 2379 is the port of ETCD to which all control plane components connect to. 2380 is only for etcd peer-to-peer connectivity. When you have multiple master nodes. In this case we don't.
 
@@ -267,7 +293,11 @@ Backup ---- ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 \
   snapshot save  /opt/snapshot-pre-boot.db
 
 STATUS ---- ETCDCTL_API=3 etcdctl snapshot status  /opt/snapshot-pre-boot.db
+            ETCDCTL_API=3 etcdctl --write-out=table snapshot status /opt/etcd-backup.db
+            ETCDCTL_API=3 etcdctl --w table snapshot status /opt/etcd-backup.db
 
+
+            
   Restore --- ETCDCTL_API=3 etcdctl  --data-dir /var/lib/etcd-from-backup \
 snapshot restore /opt/snapshot-pre-boot.db
 
@@ -351,6 +381,10 @@ source <(kubectl completion bash)
 kubectl get events --all-namespaces  --sort-by='.metadata.creationTimestamp' - check all ns through creation time 
 kubectl -n kube-system get secret clusterinfo -o yaml | grep token-map | awk '{print $2}' | base64 -d | sed "s|{||g;s|}||g;s|:|.|g;s/\"//g;" | xargs echo
 cat /etc/kubernetes/pki/tokens.csv
+
+
+
+
 
 
 
