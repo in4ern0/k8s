@@ -1,1 +1,11 @@
-
+apiVersion: v1
+kind: Pod
+metadata:
+  name: xiyar-env
+spec:
+  containers:
+  - image: nginx
+    name: scheduler-xiyar
+    envFrom:
+      - configMapRef:
+            name: app-config
