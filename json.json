@@ -63,4 +63,11 @@ $.car.wheels.[*].model
 $.*.wheels[*].model
 
 [?( @ )] - pharse fuckin []
- 
+
+[0,3]   - 1ci ve 4cu
+[0:3]   - 1-ciden 3cuye 
+[0:8:2] - her 2-cini sechecek, 2deneden yox.
+start:end:step
+[-1]    - en axirinci
+[-1:0]  [-1:] - en axirincidan en basha
+[-3:]   - axir 3dene
