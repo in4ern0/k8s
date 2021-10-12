@@ -57,7 +57,7 @@ $[?( @ > 40 )]
 @ == 40  @ in [40,43,45]
 @ != 40  @ nin [40,43,45]
 
-$.car.wheels.[ ?(  @.location == "rear-right") ].model - only location "rear-right"
+$.car.wheels.[? ( @.location == "rear-right") ].model - only location "rear-right"
 
 [*].model
 
