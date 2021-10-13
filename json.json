@@ -3,6 +3,18 @@
 
 
 
+kubectl get nodes -o json  ------ for json format 
+kubectl get nodes -o=jsonpath='{.items[*].metadata.name}'
+kubectl get nodes -o=jsonpath='{.items[*].metadata.name}{"\n"}'
+kubectl get nodes -o=jsonpath='{.items[*].metadata.name}{"\n"}{.items[*].status.nodeInfo.architecture}'
+kubectl get nodes -o=jsonpath='{.items[*].metadata.name}'{"\n"}{.items[*].status.capacity.cpu}
+kubectl get nodes -o=jsonpath='{range.items[*]}{.metadata.name}{"\t"}{.status.capacity.cpu}{"\n"}{end}'
+kubectl get nodes -o=custom-columns=ROLES:.metadata.name,CPU:.status.capacity.cpu
+kubectl get nodes --sort-by=.status.capacity.cpu
+kubectl get nodes -o=jsonpath='{range .items[*]}{.status.nodeInfo.osImage}{"\n"}'
+
+
+
 {
     "vehicles": {
       "car": {
