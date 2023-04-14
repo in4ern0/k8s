@@ -142,7 +142,7 @@ openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt
 
 openssl req -new -key ca.key -subj "/CN=KUBERNETES-ADMIN/O=system:masters" -out ca.csr 
 
-openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout - check certificate 
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout ---> check certificates
 
 
 
@@ -163,7 +163,7 @@ kubectl api-resources --namespaced=true
 kubectl api-resources --namespaced=false
 docker login private-registry.io - for private login 
 kubectl get secret private-reg-cred --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode
-docker run --user=1000 ubuntu sleep 3600 - userid=1000 olacaq
+docker run --user=1000 ubuntu sleep 3600 - userid=1000 will be
 docker run --cap-add MAC_ADMIN ubuntu
 docker run --cap-drop KILL ubuntu
 docker run --privileged ubuntu
@@ -208,22 +208,22 @@ ip link
 ip netns add red 
 ip netns 
 ip netns exec red ip link
-ip link add veth-red type veth peer name veth-blue - red ve blue-nu birleshdirmek
-ip link set veth-red netns red - red-i red yerine birleshdirmek 
-ip link set veth-blue netns blue - blue-nu blue yerine birleshdirmek
-ip -n red addr add 192.168.15.1 dev veth-red - red-e İP assign elemek
-ip -n blue addr add 192.168.15.2 dev veth-blue - blue-ya İP assign elemek
-ip -n red link set veth-red up - red-i UP elemek
-ip -n blue link set veth-blue up - blue-nu UP elemek
-ip netns exec red ping 192.168.15.2 - red-den blue-ya ping edib yoxlamaq
-ip netns exec red arp - red-in ARP listine baxmaq
-ip netns exec blue arp - blue-nun ARP listine baxmaq
-arp - HOST-un ARP listine baxmaq
+ip link add veth-red type veth peer name veth-blue - connected red and blue 
+ip link set veth-red netns red - red to connect red  
+ip link set veth-blue netns blue - blue to connect blue 
+ip -n red addr add 192.168.15.1 dev veth-red - IP assign to red
+ip -n blue addr add 192.168.15.2 dev veth-blue - IP assign to blue
+ip -n red link set veth-red up - red up
+ip -n blue link set veth-blue up - blue up
+ip netns exec red ping 192.168.15.2 -  ping from red to blue
+ip netns exec red arp - watch red ARP list 
+ip netns exec blue arp - watch blue ARP list
+arp - watch HOST ARP list
 
-             BES BİR NECHE İNTERFACE OLSA NECE BİRKESHDİRMELİ ???
-                           BRIDGE yaratmaq lazimdir 
+IF THERE ARE SEVERAL INTERFACES, HOW SHOULD THEY BE CONNECTED???
+                            It is necessary to create a BRIDGE
 
-ip link add v-net-0 type bridge - BRIDGE yaratmaq  v-net-0 adinda
+ip link add v-net-0 type bridge - BRIDGE create for v-net-0 
 ip link 
 ip link set dev v-net-0 up - BRIDGE UP 
 ip link add veth-red type veth peer name veth-red-br - add red cable for bridge
@@ -232,15 +232,15 @@ ip link set veth-red netns red - add red cable end of BRIDGE
 ip link set veth-red-br master v-net-0 - add red cable end of BRIDGE
 ip link set veth-blue netns blue - add blue cable end of BRIDGE 
 ip link set veth-blue-br master v-net-0 - add blue cable end of BRIDGE
-ip -n red addr add 192.168.15.1 dev veth-red - red-e İP assign elemek
-ip -n blue addr add 192.168.15.2 dev veth-blue - blue-ya İP assign elemek
+ip -n red addr add 192.168.15.1 dev veth-red - red IP assign
+ip -n blue addr add 192.168.15.2 dev veth-blue - blue IP assign 
 ip -n red link set veth-red up - red-i UP elemek
 ip -n blue link set veth-blue up - blue-nu UP elemek
 ip addr add 192.168.15.5/24 dev v-net-0 - v-net-0 a IP assign etmek (bridge uchun)
 ip netns exec blue route
 ip netns exec blue ping 192.168.1.3 - other network 
 ip netns blue ip route add 192.168.1.0/24 via 192.168.15.5
-iptables -t nat -A POSTROUTING -s 192.168.15.0/24 -j MASQUERADE - chole chixartmaq uchun 
+iptables -t nat -A POSTROUTING -s 192.168.15.0/24 -j MASQUERADE - for publish
 ip netns exec blue ip route add default via 192.168.15.5 - last add gateway for net access WWW
 iptables -t nat -A PREROUTING --dport 80 --to-destination 192.168.15.2:80 -j DNAT 
 iptables -L -t net | grep db-service
@@ -257,7 +257,7 @@ ps aux | grep kubectl
 
 kubectl run busybox --image=busybox --command sleep 1000 --dry-run=client -o yaml > pod.yml    ( add nodeName:node03 in a yaml for scheduling only for node03)
 kubectl exec -ti busybox -- bash 
-kubectl -n kube-system logs weave-net-h2x9w -c weave  ------ ipalloc-range=-e baxmaq lazimdir 
+kubectl -n kube-system logs weave-net-h2x9w -c weave  ------ ipalloc-range= show should watch this variable.
 
 
 
