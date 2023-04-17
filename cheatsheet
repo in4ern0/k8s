@@ -27,7 +27,7 @@ kubectl get services
 kubectl get svc 
 kubectl create -f pod-definition.yml --record - create pods with .yml file 
 kubectl get replicationcontroller
-kubectl edit pods apache-rc-x5tfj - podu ozunde deyishiklik etmek
+kubectl edit pods apache-rc-x5tfj - edit pods (YAMLorJSON)
 
 
 
