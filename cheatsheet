@@ -13,6 +13,13 @@ docker run --name redis redis:alpine --------->>   nerdctl run --name redis redi
 
 ctr run docker.io/library/redis:alpine redis (the same commands replace docker command to nerdctl)
 
+crictl pull busybox
+crictl images
+crictl ps -a
+crictl exec -it CONTAINER_ID ls
+crictl logs 
+crictl pod
+
 *****************************************************************************************************************************************************
 
 minikube start --memory="1992"
