@@ -2,6 +2,19 @@ https://labs.play-with-k8s.com/
 yum install -y conntrack
 
 
+*****************************************************************************************************************************************************
+1.24 - CONTAINER D
+
+ctr images pull docker.io/library/redis:alpine
+
+ctr run docker.io/library/redis:alpine redis
+
+docker run --name redis redis:alpine --------->>   nerdctl run --name redis redis:alpine.
+
+ctr run docker.io/library/redis:alpine redis (the same commands replace docker command to nerdctl)
+
+*****************************************************************************************************************************************************
+
 minikube start --memory="1992"
 minikube stop
 minikube delete 
@@ -381,10 +394,6 @@ source <(kubectl completion bash)
 kubectl get events --all-namespaces  --sort-by='.metadata.creationTimestamp' - check all ns through creation time 
 kubectl -n kube-system get secret clusterinfo -o yaml | grep token-map | awk '{print $2}' | base64 -d | sed "s|{||g;s|}||g;s|:|.|g;s/\"//g;" | xargs echo
 cat /etc/kubernetes/pki/tokens.csv
-
-
-
-
 
 
 
