@@ -111,6 +111,7 @@ kubectl get sa - service account
 kubectl -n kube-system get ep kube-dns - endpoints 
 
 kubectl taint node node01 spray=mortein:NoSchedule
+kubectl taint nodes controlplane node-role.kubernetes.io/control-plane:NoSchedule-      ---> last - means remove
 
 ****************************************************************************************************
 kubectl logs-f podname 
