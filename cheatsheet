@@ -86,7 +86,7 @@ kubectl get pods --namespace=dev
 
 
 
-
+kubectl run httpd --image httpd:alpine --port 80 --expose - create pod name httpd and create service name httpd port 80
 kubectl config set-context $(kubectl config current-context) --namespace=dev ------ change defaultnamespace for "dev"
 kubectl get ns --no-headers | wc -l - total namespaces
 kubectl run redis --image=redis --dry-run=client -o yaml > pod.yml
