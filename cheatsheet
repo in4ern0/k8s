@@ -56,7 +56,7 @@ kubectl create -f pod-definition.yml --record - create pods with .yml file
 kubectl get replicationcontroller
 kubectl edit pods apache-rc-x5tfj - edit pods (YAMLorJSON)
 
-
+kubectl explain deployment -- to correct if there is an issue 
 
 kubectl edit replicasets.apps - runtime change (for exp: replicas=10) 
 kubectl get replicaset
