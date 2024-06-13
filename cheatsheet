@@ -42,7 +42,8 @@ kubectl run hello-minikube - create deployment
 kubectl delete deployment hello-minikube - delete deployment
 kubectl cluster-info
 kubectl get nodes
-kubectl get all 
+kubectl get all
+kubectl get pod --watch
 kubectl get nodes -o wide - detailed info
 kubectl port-forward service/hello-minikube 7080:8080 - Alternatively, use kubectl to forward the port
 kubectl get po -A - check k8s cluster info
