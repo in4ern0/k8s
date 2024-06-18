@@ -189,6 +189,7 @@ kubectl auth can-i delete nodes
 kubectl auth can-i delete nodes --as dev-user
 kubectl auth can-i create deployments --as dev-user
 kubectl auth can-i create pods --as dev-user --namespace test 
+kubectl auth can-i list storageclasses --as michelle.
 kubectl get pods --as dev-user
 kubectl auth can-i get pods --as dev-user --namespace default
 kubectl api-resources --namespaced=true
@@ -205,7 +206,8 @@ kubectl describe netpol payroll-policy
 kubectl describe cm -n kube-system coredns --- to describe domain/zone and etc.
 kubectl create role developer --namespace=default --verb=list,create,delete --resource=pods
 kubectl create rolebinding dev-user-binding --namespace=default --role=developer --user=dev-user
-
+kubectl create clusterrole storage-admin --resource persistentvolumes,storageclasses --verb list
+kubectl create clusterrolebinding michelle-storage-admin --clusterrole storage-admin --user michelle
 
 
 
