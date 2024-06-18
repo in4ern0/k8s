@@ -210,7 +210,7 @@ kubectl create clusterrole storage-admin --resource persistentvolumes,storagecla
 kubectl create clusterrolebinding michelle-storage-admin --clusterrole storage-admin --user michelle
 
 
-
+kubectl create secret docker-registry private-reg-cred --docker-username=dock_user --docker-password=dock_password --docker-server=myprivateregistry.com:5000 --docker-email=dock_user@myprivateregistry.com
 
 *******************************************************************************
 kubectl run test-np --image=busybox:1.28 --rm -it -- sh 
