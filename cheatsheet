@@ -203,7 +203,8 @@ kubectl exec ubuntu-sleeper -- whoami
 kubectl get pod -l name=payroll
 kubectl describe netpol payroll-policy
 kubectl describe cm -n kube-system coredns --- to describe domain/zone and etc.
-
+kubectl create role developer --namespace=default --verb=list,create,delete --resource=pods
+kubectl create rolebinding dev-user-binding --namespace=default --role=developer --user=dev-user
 
 
 
