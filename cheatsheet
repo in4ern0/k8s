@@ -130,7 +130,7 @@ kubectl create cm configmapname --from-literal=APP_COLOR=darkblue
 kubectl create secret generic app-secret --from-literal=DB_HOST=mysql --from-literal=DB_User=root --from-literal=DB_Password=passwd
 kubectl create secret generic <secret-name> --from-file=<path-to-file>
 kubectl create secret generic --from-file=app_secret.properties
-
+kubectl create ingress ingress-test --rule="wear.my-online-store.com/wear*=wear-service:80"
 
 1.kubectl drain node-1 --ignore-daemonsets --force - NODE-u boshaltmaq uchun (drain eden de cordon olur) 
 2.kubectl uncordon node-1 - NODE drain-den sonra unscheduled olur onu scheduled etmek uchun.
